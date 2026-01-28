@@ -36,5 +36,6 @@ jobs:
           maximize_build_space: true
           retry_push_count: 3
           build_chunked_oci: true
+          max_layers: 96
           # disable it when it's mostly ready
           rechunk_clear_plan: true
