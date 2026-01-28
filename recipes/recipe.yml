@@ -74,3 +74,5 @@ modules:
         - rpm-ostreed-automatic.timer
       masked:
         - flatpak-add-fedora-repos.service
+
+  - type: signing
