@@ -36,7 +36,7 @@ pkgs=(
 PKG_PAT=()
 for pkg in "${pkgs[@]}"; do
     # FIXME: assumes the kernel starts with version 6
-    PKG_PAT+=("/tmp/kernel/${pkg}-6"*)
+    PKG_PAT+=("/ctx/kernel/${pkg}-6"*)
 done
 
 dnf5 -y install ${PKG_PAT[@]}
@@ -47,3 +47,8 @@ pushd /usr/lib/kernel/install.d
 mv -f 05-rpmostree.install.bak 05-rpmostree.install
 mv -f 50-dracut.install.bak 50-dracut.install
 popd
+
+KERNEL_VERSION="$(find "/usr/lib/modules" -maxdepth 1 -type d ! -path "/usr/lib/modules" -exec basename '{}' ';' | sort | tail -n 1)"
+export DRACUT_NO_XATTR=1
+dracut --no-hostonly --kver "$KERNEL_VERSION" --reproducible --zstd -v --add ostree -f "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"
+chmod 0600 "/usr/lib/modules/${KERNEL_VERSION}/initramfs.img"
