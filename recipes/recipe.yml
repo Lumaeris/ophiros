@@ -75,4 +75,6 @@ modules:
       masked:
         - flatpak-add-fedora-repos.service
 
+  - type: initramfs
+
   - type: signing
