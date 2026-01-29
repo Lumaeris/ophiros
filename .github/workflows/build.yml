@@ -90,6 +90,7 @@ jobs:
         id: build_image
         env:
           META_LABELS: ${{ steps.metadata.outputs.labels }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           set -x
 
@@ -100,7 +101,7 @@ jobs:
           fi
           done <<< "$META_LABELS"
 
-          sudo podman build "${BUILD_ARGS[@]}" --tag "$IMAGE_NAME:$DEFAULT_TAG" .
+          sudo podman build "${BUILD_ARGS[@]}" --tag "$IMAGE_NAME:$DEFAULT_TAG" --secret "id=GITHUB_TOKEN,env=GITHUB_TOKEN" .
 
       # using rpm-ostree compose build-chunked-oci directly
       - name: Rechunk Image
