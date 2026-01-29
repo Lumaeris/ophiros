@@ -20,7 +20,8 @@ dnf5 -y remove ublue-os-udev-rules \
     podman-docker \
     yelp \
     cosign \
-    toolbox
+    toolbox \
+    gnome-tour
 
 rm -f /etc/yum.repos.d/_copr_ublue-os-akmods.repo
 
@@ -62,5 +63,8 @@ systemctl enable systemd-timesyncd.service
 systemctl enable systemd-resolved.service
 systemctl enable brew-setup.service
 systemctl enable flatpak-nuke-fedora.service
+systemctl enable powerstation.service
+systemctl enable inputplumber.service
+systemctl enable inputplumber-suspend.service
 systemctl disable rpm-ostree-countme.service
 systemctl disable rpm-ostreed-automatic.timer
