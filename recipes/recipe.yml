@@ -75,6 +75,7 @@ modules:
         - systemd-timesyncd.service
         - systemd-resolved.service
         - brew-setup.service
+        - flatpak-nuke-fedora.service
       disabled:
         - rpm-ostree-countme.service
         - rpm-ostreed-automatic.timer
