@@ -3,7 +3,6 @@ FROM scratch AS ctx
 COPY build /
 COPY files /files
 COPY cosign.pub /files/etc/pki/containers/lumaeris.pub
-COPY --from=ghcr.io/ublue-os/brew:latest /system_files /files
 COPY --from=ghcr.io/projectbluefin/common:latest /system_files/shared/usr/lib/udev /files/usr/lib/udev
 COPY --from=ghcr.io/bazzite-org/kernel-bazzite:latest-f43-x86_64 / /kernel
 

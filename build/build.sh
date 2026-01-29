@@ -46,6 +46,10 @@ dnf5 -y install https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v$
     https://github.com/ShadowBlip/InputPlumber/releases/download/v${IP_TAG}/inputplumber-${IP_TAG}-1.x86_64.rpm \
     https://github.com/ShadowBlip/PowerStation/releases/download/v${PS_TAG}/powerstation-${PS_TAG}-1.x86_64.rpm
 
+dnf5 -y copr enable secureblue/homebrew
+dnf5 -y install homebrew
+dnf5 -y copr disable secureblue/homebrew
+
 sed -i 's@\[Desktop Entry\]@\[Desktop Entry\]\nHidden=true@g' /usr/share/applications/htop.desktop
 sed -i 's@\[Desktop Entry\]@\[Desktop Entry\]\nHidden=true@g' /usr/share/applications/nvtop.desktop
 rm -rf /usr/src
