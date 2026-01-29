@@ -34,10 +34,12 @@ dnf5 -y install --setopt=install_weak_deps=False steam
 
 dnf5 -y copr enable ublue-os/bazzite
 dnf5 -y copr enable ublue-os/bazzite-multilib
+dnf5 -y copr enable ycollet/audinux
 dnf5 -y config-manager setopt '*bazzite*'.priority=90
-dnf5 -y install gamescope-libs gamescope-shaders
+dnf5 -y install gamescope-libs gamescope-shaders steamdeck-dsp
 dnf5 -y copr disable ublue-os/bazzite
 dnf5 -y copr disable ublue-os/bazzite-multilib
+dnf5 -y copr disable ycollet/audinux
 
 OGUI_TAG=$(/ctx/ghcurl https://api.github.com/repos/ShadowBlip/OpenGamepadUI/releases/latest | grep tag_name | cut -d : -f2 | tr -d "v\", ")
 IP_TAG=$(/ctx/ghcurl https://api.github.com/repos/ShadowBlip/InputPlumber/releases/latest | grep tag_name | cut -d : -f2 | tr -d "v\", ")
