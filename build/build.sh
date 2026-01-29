@@ -21,7 +21,8 @@ dnf5 -y remove ublue-os-udev-rules \
     yelp \
     cosign \
     toolbox \
-    gnome-tour
+    gnome-tour \
+    gnome-classic-session
 
 rm -f /etc/yum.repos.d/_copr_ublue-os-akmods.repo
 
@@ -50,6 +51,11 @@ dnf5 -y copr enable secureblue/homebrew
 dnf5 -y install homebrew
 dnf5 -y copr disable secureblue/homebrew
 
+dnf5 -y copr enable ublue-os/packages
+dnf5 -y install bazaar
+dnf5 -y copr disable ublue-os/packages
+
+glib-compile-schemas /usr/share/glib-2.0/schemas
 sed -i 's@\[Desktop Entry\]@\[Desktop Entry\]\nHidden=true@g' /usr/share/applications/htop.desktop
 sed -i 's@\[Desktop Entry\]@\[Desktop Entry\]\nHidden=true@g' /usr/share/applications/nvtop.desktop
 rm -rf /usr/src
