@@ -1,0 +1,6 @@
+blocklists:
+  - priority: 0
+    block:
+    - io.github.kolunmi.Bazaar
+    - com.valvesoftware.Steam
+    - app.devsuite.Ptyxis
