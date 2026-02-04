@@ -105,7 +105,7 @@ jobs:
 
       # using rpm-ostree compose build-chunked-oci directly
       - name: Rechunk Image
-        run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:localhost/${IMAGE_NAME}:${DEFAULT_TAG}
+        run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:localhost/${IMAGE_NAME}:${DEFAULT_TAG} || exit 1
 
       # TODO: remove me when we have a new podman in 26.04 runners
       # needed because old podman doesn't push layer annotations for
