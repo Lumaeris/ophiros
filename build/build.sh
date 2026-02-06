@@ -71,6 +71,11 @@ systemctl mask flatpak-add-fedora-repos.service
 #sed -i 's|uupd|& --disable-module-distrobox|' /usr/lib/systemd/system/uupd.service
 dnf5 clean all
 
+KERNEL_VERSION="$(find "/usr/lib/modules" -maxdepth 1 -type d ! -path "/usr/lib/modules" -exec basename '{}' ';' | sort | tail -n 1)"
+export DRACUT_NO_XATTR=1
+dracut --no-hostonly --kver "$KERNEL_VERSION" --reproducible --zstd -v --add ostree -f "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"
+chmod 0600 "/usr/lib/modules/${KERNEL_VERSION}/initramfs.img"
+
 systemctl enable systemd-timesyncd.service
 systemctl enable systemd-resolved.service
 systemctl enable brew-setup.service
