@@ -94,6 +94,5 @@ systemctl enable flatpak-nuke-fedora.service
 systemctl enable powerstation.service
 systemctl enable inputplumber.service
 systemctl enable inputplumber-suspend.service
-systemctl enable --global ophiros-steam-extract.service
 systemctl disable rpm-ostree-countme.service
 systemctl disable rpm-ostreed-automatic.timer
