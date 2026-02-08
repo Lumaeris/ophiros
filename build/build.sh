@@ -31,6 +31,9 @@ cp -avf "/ctx/files"/. /
 # swap to bazzite kernel
 /ctx/swap-kernel.sh
 
+# put homebrew to its own layer
+setfattr -n user.component -v "homebrew" /usr/share/homebrew.tar.zst
+
 # install steam and sddm (the latter is needed for gamescope session)
 dnf5 -y install --setopt=install_weak_deps=False steam sddm
 
@@ -57,11 +60,6 @@ PS_TAG=$(/ctx/ghcurl https://api.github.com/repos/ShadowBlip/PowerStation/releas
 dnf5 -y install https://github.com/ShadowBlip/OpenGamepadUI/releases/download/v${OGUI_TAG}/opengamepadui-${OGUI_TAG}-1.x86_64.rpm \
     https://github.com/ShadowBlip/InputPlumber/releases/download/v${IP_TAG}/inputplumber-${IP_TAG}-1.x86_64.rpm \
     https://github.com/ShadowBlip/PowerStation/releases/download/v${PS_TAG}/powerstation-${PS_TAG}-1.x86_64.rpm
-
-# install homebrew from secureblue (mostly the same as ublue's brew oci)
-dnf5 -y copr enable secureblue/homebrew
-dnf5 -y install homebrew
-dnf5 -y copr disable secureblue/homebrew
 
 # install bazaar
 dnf5 -y copr enable ublue-os/packages
