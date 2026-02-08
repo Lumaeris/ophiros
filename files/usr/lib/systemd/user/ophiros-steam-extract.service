@@ -1,0 +1,16 @@
+# should be used for systems when steam isn't a primary focus of it but still wants steam to be present
+# this service ultimately eliminates the need for the internet in order to get somewhat functional steam (like on bazzite-deck)
+[Unit]
+Description=Ophiros Steam Bootstrap extract
+Wants=basic.target
+After=basic.target
+ConditionPathExists=!%h/.local/share/Steam
+ConditionPathExists=/usr/share/gamescope-session-plus/steam_bootstrap.tar.xz
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/mkdir -p %h/.local/share/Steam
+ExecStart=/usr/bin/tar --xz -xvf /usr/share/gamescope-session-plus/steam_bootstrap.tar.xz -C %h/.local/share/Steam
+
+[Install]
+WantedBy=default.target multi-user.target
