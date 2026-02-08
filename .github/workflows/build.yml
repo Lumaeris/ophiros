@@ -110,10 +110,10 @@ jobs:
       # TODO: remove me when we have a new podman in 26.04 runners
       # needed because old podman doesn't push layer annotations for
       # the rpm-ostree rechunker at all
-      #- name: Install Podman from Brew
-      #  if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-      #  run: |
-      #    /home/linuxbrew/.linuxbrew/bin/brew install podman
+      - name: Install Podman from Brew
+        if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        run: |
+          /home/linuxbrew/.linuxbrew/bin/brew install podman
 
       - name: Login to GitHub Container Registry
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
@@ -139,8 +139,8 @@ jobs:
           for _ in $(seq 2); do
             for tag in $IMAGE_TAGS; do
               for i in $(seq "${MAX_RETRIES}"); do
-                #sudo /home/linuxbrew/.linuxbrew/bin/podman push --digestfile=/tmp/digestfile "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
-                sudo podman push --digestfile=/tmp/digestfile "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
+                sudo /home/linuxbrew/.linuxbrew/bin/podman push --digestfile=/tmp/digestfile "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
+                #sudo podman push --digestfile=/tmp/digestfile "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
               done
             done
           done
