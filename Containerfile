@@ -13,9 +13,6 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=tmpfs,dst=/tmp \
     /ctx/build.sh
 
-# make an additional layer just for steam bootstrap
-RUN setfattr -n user.components -v "steam-bootstrap" /usr/share/gamescope-session-plus/steam_bootstrap.tar.xz
-
 # optimizing the image so bootc won't complain
 # also applying a workaround for /opt
 RUN rm -rf /var/* && \
