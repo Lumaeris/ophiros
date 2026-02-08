@@ -14,7 +14,7 @@ RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     /ctx/build.sh
 
 # make an additional layer just for steam bootstrap
-RUN setfattr -n user.components -v "steam-bootstrap" /usr/share/gamescope-session-plus/steam_boostrap.tar.xz
+RUN setfattr -n user.components -v "steam-bootstrap" /usr/share/gamescope-session-plus/steam_bootstrap.tar.xz
 
 # optimizing the image so bootc won't complain
 # also applying a workaround for /opt
