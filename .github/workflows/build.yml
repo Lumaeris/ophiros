@@ -102,10 +102,13 @@ jobs:
           done <<< "$META_LABELS"
 
           sudo podman build "${BUILD_ARGS[@]}" --tag "$IMAGE_NAME:$DEFAULT_TAG" --secret "id=GITHUB_TOKEN,env=GITHUB_TOKEN" .
+      
+      - name: Pull previous tag
+        run: sudo podman pull "${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}"
 
       # using rpm-ostree compose build-chunked-oci directly
       - name: Rechunk Image
-        run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:localhost/${IMAGE_NAME}:${DEFAULT_TAG} || exit 1
+        run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG} || exit 1
 
       # TODO: remove me when we have a new podman in 26.04 runners
       # needed because old podman doesn't push layer annotations for
@@ -139,8 +142,8 @@ jobs:
           for _ in $(seq 2); do
             for tag in $IMAGE_TAGS; do
               for i in $(seq "${MAX_RETRIES}"); do
-                sudo /home/linuxbrew/.linuxbrew/bin/podman push --digestfile=/tmp/digestfile "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
-                #sudo podman push --digestfile=/tmp/digestfile "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
+                sudo /home/linuxbrew/.linuxbrew/bin/podman push --digestfile=/tmp/digestfile "${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
+                #sudo podman push --digestfile=/tmp/digestfile "${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}" "${IMAGE_REGISTRY}/${IMAGE_NAME}:${tag}" && break || sleep $((5 * i));
               done
             done
           done
