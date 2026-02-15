@@ -103,9 +103,14 @@ jobs:
 
           sudo podman build "${BUILD_ARGS[@]}" --tag "$IMAGE_NAME:$DEFAULT_TAG" --secret "id=GITHUB_TOKEN,env=GITHUB_TOKEN" .
 
+      # pull older update
+      - name: Pull Older Image
+        run: sudo podman pull ${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}
+
       # using rpm-ostree compose build-chunked-oci directly
+      # centos bootc is used for now because of newer rpm-ostree rpm than the one in fedora repos 
       - name: Rechunk Image
-        run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "localhost/${IMAGE_NAME}:${DEFAULT_TAG}" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG} || exit 1
+        run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "quay.io/centos-bootc/centos-bootc:stream10" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG} || exit 1
 
       # TODO: remove me when we have a new podman in 26.04 runners
       # needed because old podman doesn't push layer annotations for
