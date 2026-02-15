@@ -12,6 +12,11 @@ on:
     paths-ignore:
       - "**/README.md"
   workflow_dispatch:
+    inputs:
+      fresh-rechunk:
+        description: "Clear rechunk history"
+        type: boolean
+        default: false
 
 env:
   IMAGE_DESC: "Ophiros (codename)"
@@ -103,12 +108,14 @@ jobs:
 
           sudo podman build "${BUILD_ARGS[@]}" --tag "$IMAGE_NAME:$DEFAULT_TAG" --secret "id=GITHUB_TOKEN,env=GITHUB_TOKEN" .
 
-      # pull older update
+      # pull older update so rechunker can use it as a baseline
+      # this step is skipped whenever we need a fresh rechunk plan (useful for new fedora release every now and then)
       - name: Pull Older Image
+        if: github.event.inputs.fresh-rechunk != true
         run: sudo podman pull ${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}
 
       # using rpm-ostree compose build-chunked-oci directly
-      # centos bootc is used for now because of newer rpm-ostree rpm than the one in fedora repos 
+      # centos bootc is pulled to use newer rpm-ostree than the one found in fedora repos
       - name: Rechunk Image
         run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "quay.io/centos-bootc/centos-bootc:stream10" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG} || exit 1
 
