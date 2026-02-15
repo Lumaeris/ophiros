@@ -111,7 +111,7 @@ jobs:
       # pull older update so rechunker can use it as a baseline
       # this step is skipped whenever we need a fresh rechunk plan (useful for new fedora release every now and then)
       - name: Pull Older Image
-        if: github.event.inputs.fresh-rechunk != true
+        if: inputs.fresh-rechunk != true
         run: sudo podman pull ${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}
 
       # using rpm-ostree compose build-chunked-oci directly
