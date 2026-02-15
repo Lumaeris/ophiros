@@ -4,8 +4,7 @@ set -xeuo pipefail
 
 # remove leftovers
 dnf5 config-manager setopt fedora-cisco-openh264.enabled=0
-dnf5 -y remove ublue-os-udev-rules \
-    ublue-os-update-services \
+dnf5 -y remove ublue-os-update-services \
     ublue-os-signing \
     fedora-bookmarks \
     fedora-chromium-config \
