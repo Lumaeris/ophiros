@@ -112,7 +112,11 @@ jobs:
       # this step is skipped whenever we need a fresh rechunk plan (useful for new fedora release every now and then)
       - name: Pull Older Image
         if: inputs.fresh-rechunk != true
-        run: sudo podman pull ${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}
+        run: |
+          # skip anyway on every first day of the month
+          if [ $(date -u +%d) -ne "16" ]; then
+            sudo podman pull ${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}
+          fi
 
       # using rpm-ostree compose build-chunked-oci directly
       # centos bootc is pulled to use newer rpm-ostree than the one found in fedora repos
