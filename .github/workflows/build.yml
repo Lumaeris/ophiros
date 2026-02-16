@@ -108,18 +108,23 @@ jobs:
 
           sudo podman build "${BUILD_ARGS[@]}" --tag "$IMAGE_NAME:$DEFAULT_TAG" --secret "id=GITHUB_TOKEN,env=GITHUB_TOKEN" .
 
-      # pull older update so rechunker can use it as a baseline
-      # this step is skipped whenever we need a fresh rechunk plan (useful for new fedora release every now and then)
+      # pull older update so rechunker can use it as baseline
+      # this step is skipped whenever we need a fresh rechunk plan
+      # (useful for new fedora release every now and then)
+      # TODO: swap to --previous-build when fedora repos gets
+      # rpm-ostree 2026.2 on the next step
       - name: Pull Older Image
         if: inputs.fresh-rechunk != true
         run: |
-          # skip anyway on every first day of the month
-          if [ $(date -u +%d) -ne "16" ]; then
+          # skip anyway on the first day of every month
+          if [ $(date -u +%d) -ne "01" ]; then
             sudo podman pull ${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG}
           fi
 
       # using rpm-ostree compose build-chunked-oci directly
-      # centos bootc is pulled to use newer rpm-ostree than the one found in fedora repos
+      # TODO: switch from centos bootc back to reusing local image
+      # when fedora repos gets rpm-ostree 2026.1 or newer
+      # upstream issue: https://github.com/bootc-dev/bootc/issues/1885
       - name: Rechunk Image
         run: sudo podman run --rm --privileged -v /var/lib/containers:/var/lib/containers --entrypoint /usr/bin/rpm-ostree "quay.io/centos-bootc/centos-bootc:stream10" compose build-chunked-oci --bootc --format-version=1 --max-layers=96 --from=localhost/${IMAGE_NAME}:${DEFAULT_TAG} --output=containers-storage:${IMAGE_REGISTRY}/${IMAGE_NAME}:${DEFAULT_TAG} || exit 1
 
@@ -128,8 +133,7 @@ jobs:
       # the rpm-ostree rechunker at all
       - name: Install Podman from Brew
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
-        run: |
-          /home/linuxbrew/.linuxbrew/bin/brew install podman || exit 1
+        run: /home/linuxbrew/.linuxbrew/bin/brew install podman || exit 1
 
       - name: Login to GitHub Container Registry
         if: github.event_name != 'pull_request' && github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
