@@ -19,6 +19,7 @@ on:
         default: false
 
 env:
+  FEDORA_VERSION: "43"
   IMAGE_DESC: "Ophiros (codename)"
   IMAGE_KEYWORDS: "bootc,fedora"
   IMAGE_LOGO_URL: "https://avatars.githubusercontent.com/u/10499845?s=200&v=4"
@@ -70,6 +71,8 @@ jobs:
             type=raw,value=${{ env.DEFAULT_TAG }}
             type=raw,value=${{ env.DEFAULT_TAG }}.{{date 'YYYYMMDD'}}
             type=raw,value={{date 'YYYYMMDD'}}
+            type=raw,value=${{ env.FEDORA_VERSION }}
+            type=raw,value=${{ env.FEDORA_VERSION }}.{{date 'YYYYMMDD'}}
             type=sha,enable=${{ github.event_name == 'pull_request' }}
             type=ref,event=pr
           labels: |
@@ -106,7 +109,7 @@ jobs:
           fi
           done <<< "$META_LABELS"
 
-          sudo podman build "${BUILD_ARGS[@]}" --tag "$IMAGE_NAME:$DEFAULT_TAG" --secret "id=GITHUB_TOKEN,env=GITHUB_TOKEN" .
+          sudo podman build "${BUILD_ARGS[@]}" "--build-arg=FEDORA_VERSION=$FEDORA_VERSION" --tag "$IMAGE_NAME:$DEFAULT_TAG" --secret "id=GITHUB_TOKEN,env=GITHUB_TOKEN" .
 
       # pull older update so rechunker can use it as baseline
       # this step is skipped whenever we need a fresh rechunk plan
