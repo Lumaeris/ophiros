@@ -40,7 +40,6 @@ dnf5 -y install --setopt=install_weak_deps=False steam sddm
 curl --retry 3 -Lo /tmp/steam.tar.zst https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steam-jupiter-stable-1.0.0.85-2-x86_64.pkg.tar.zst
 rm -f /usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz
 tar -I zstd -xvf "/tmp/steam.tar.zst" usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz -O > "/usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz"
-#setfattr -n user.component -v "steam-bootstrap" /usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz
 
 # enable bunch of repos, install gamescope{,-session} and steam deck dsp (for oled model)
 dnf5 -y copr enable ublue-os/bazzite
