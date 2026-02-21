@@ -36,11 +36,6 @@ setfattr -n user.component -v "homebrew" /usr/share/homebrew.tar.zst
 # install steam and sddm (the latter is needed for gamescope session)
 dnf5 -y install --setopt=install_weak_deps=False steam sddm
 
-# get steam and extract big bootstrap file from it
-curl --retry 3 -Lo /tmp/steam.tar.zst https://steamdeck-packages.steamos.cloud/archlinux-mirror/jupiter-main/os/x86_64/steam-jupiter-stable-1.0.0.85-2-x86_64.pkg.tar.zst
-rm -f /usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz
-tar -I zstd -xvf "/tmp/steam.tar.zst" usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz -O > "/usr/lib/steam/bootstraplinux_ubuntu12_32.tar.xz"
-
 # enable bunch of repos, install gamescope{,-session} and steam deck dsp (for oled model)
 dnf5 -y copr enable ublue-os/bazzite
 dnf5 -y copr enable ublue-os/bazzite-multilib
