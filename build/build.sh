@@ -89,7 +89,6 @@ dracut --no-hostonly --kver "$KERNEL_VERSION" --reproducible --zstd -v --add ost
 chmod 0600 "/usr/lib/modules/${KERNEL_VERSION}/initramfs.img"
 
 cp "${tmp_release_file}" /etc/os-release
-rm "${tmp_release_file}"
 
 systemctl enable systemd-timesyncd.service
 systemctl enable systemd-resolved.service
