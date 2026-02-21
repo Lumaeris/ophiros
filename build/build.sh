@@ -75,11 +75,21 @@ systemctl mask flatpak-add-fedora-repos.service
 #sed -i 's|uupd|& --disable-module-distrobox|' /usr/lib/systemd/system/uupd.service
 dnf5 clean all
 
+# Temporarily patch /etc/os-release to avoid the initramfs depending on the
+# version number (which changes daily).
+# https://github.com/secureblue/secureblue/pull/1923
+tmp_release_file=$(mktemp --tmpdir 'os-release-XXXXXXXXXX')
+cp /etc/os-release "${tmp_release_file}"
+sed -Ei -e '/^(OSTREE_)VERSION=/d' /etc/os-release
+
 # regenerate initramfs (since we no longer have it)
 KERNEL_VERSION="$(find "/usr/lib/modules" -maxdepth 1 -type d ! -path "/usr/lib/modules" -exec basename '{}' ';' | sort | tail -n 1)"
 export DRACUT_NO_XATTR=1
 dracut --no-hostonly --kver "$KERNEL_VERSION" --reproducible --zstd -v --add ostree -f "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"
 chmod 0600 "/usr/lib/modules/${KERNEL_VERSION}/initramfs.img"
+
+cp "${tmp_release_file}" /etc/os-release
+rm "${tmp_release_file}"
 
 systemctl enable systemd-timesyncd.service
 systemctl enable systemd-resolved.service
