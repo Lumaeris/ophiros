@@ -2,6 +2,9 @@
 
 set -xeuo pipefail
 
+# swap to generic logos
+dnf5 swap -y fedora-logos generic-logos
+
 # remove leftovers
 dnf5 config-manager setopt fedora-cisco-openh264.enabled=0
 dnf5 -y remove ublue-os-update-services \
