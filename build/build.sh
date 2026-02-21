@@ -70,7 +70,7 @@ rm -rf /usr/src
 rm -rf /usr/share/doc
 rm -rf /usr/share/man
 rpm --erase --nodeps kernel-devel
-flatpak remote-add --system --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+flatpak remote-add --system --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 systemctl mask flatpak-add-fedora-repos.service
 #sed -i 's|uupd|& --disable-module-distrobox|' /usr/lib/systemd/system/uupd.service
 dnf5 clean all
